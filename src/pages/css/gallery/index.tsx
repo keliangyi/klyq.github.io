@@ -10,8 +10,8 @@ interface Iimage {
 	height: number
 }
 
-const WIDTH = 300
-const HEIGHT = 200
+const WIDTH = 320
+const HEIGHT = 240
 
 const Gallery: FC = () => {
 	const [imgs, setImgs] = useImmer<Iimage[]>([])
@@ -28,7 +28,7 @@ const Gallery: FC = () => {
 
 	useEffect(() => {
 		const getImgs = async () => {
-			const res = await fetch('https://api.pexels.com/v1/search?query=city', {
+			const res = await fetch('https://api.pexels.com/v1/curated?per_page=20', {
 				headers: {
 					Authorization: PEXELS_AUTHORIZATION,
 				},
@@ -38,7 +38,7 @@ const Gallery: FC = () => {
 				data.photos.map((item: any) => {
 					const bili = item.width / WIDTH
 					const height = item.height / bili
-					return { id: item.id, src: item.src.original + '?auto=compress&w=300', height, width: WIDTH }
+					return { id: item.id, src: `${item.src.original}?auto=compress&w=${WIDTH}'`, height, width: WIDTH }
 				}),
 			)
 		}
