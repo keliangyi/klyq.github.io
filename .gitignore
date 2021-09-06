@@ -15,6 +15,7 @@
 
 # umi
 /src/.umi
+/src/config.ts
 /src/.umi-production
 /src/.umi-test
 /.env.local
