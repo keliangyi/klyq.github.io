@@ -10,6 +10,7 @@ export default function IndexPage() {
 			<Link to="/drag/sort">sort</Link>
 			<Link to="/css/tabbar">tabbar 背景色</Link>
 			<Link to="/css/grayscale">grayscale</Link>
+			<Link to="/css/gallery">gallery</Link>
 		</div>
 		// <Redirect to="/clock"/>
 	)
