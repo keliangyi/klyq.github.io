@@ -1,0 +1,74 @@
+
+.clock{
+    display: flex;
+    align-items: center;
+    height: 100vh;
+    background-image: url(../../../public/tree.jpg);
+    background-attachment: fixed;
+    background-size: 100%;
+    color: #fff;
+    overflow: hidden;
+    .wrapper{
+        @h  :   90vh;
+        position: relative;
+        width: @h;
+        height: @h;
+        margin: 0 auto;
+        font-size: 18px;
+        border-radius: 50%;
+        overflow: hidden;
+        .group{
+
+            @padding    :       70px;
+
+            
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            transition: all .3s;
+            transform-origin: center center;
+            
+            &:nth-child(2) {
+                .item div{
+                    padding-right: @padding;
+                }
+            }
+            &:nth-child(3) {
+                .item div{
+                    padding-right: @padding * 2;
+                }
+            }
+            &:nth-child(4){
+                .item div{
+                    padding-right: @padding * 3;
+                }
+            }
+            &:nth-child(5){
+                .item div{
+                    padding-right: @padding * 4;
+                }
+            }
+            &:nth-child(6) {
+                .item div{
+                    padding-right: @padding * 5;
+                }
+            }
+            
+        }
+        .item{
+            width: 50%;
+            height: 47px;
+            text-align: right;
+            transform-origin: left center;
+            position: absolute;
+            top: 50%;
+            right: 0;  
+            &.on{
+                color: red;
+                font-weight: bold;
+            }                    
+        }
+    }
+}
