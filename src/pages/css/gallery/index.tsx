@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react'
+import { FC, useEffect, CSSProperties } from 'react'
 import { useImmer } from '@/hooks'
 import { PEXELS_AUTHORIZATION } from '@/config'
 import styles from './gallery.less'
@@ -28,7 +28,7 @@ const Gallery: FC = () => {
 
 	useEffect(() => {
 		const getImgs = async () => {
-			const res = await fetch('https://api.pexels.com/v1/curated?per_page=20', {
+			const res = await fetch('https://api.pexels.com/v1/search?query=mountain&per_page=30', {
 				headers: {
 					Authorization: PEXELS_AUTHORIZATION,
 				},
@@ -36,9 +36,9 @@ const Gallery: FC = () => {
 			const data = await res.json()
 			setImgs(
 				data.photos.map((item: any) => {
-					const bili = item.width / WIDTH
-					const height = item.height / bili
-					return { id: item.id, src: `${item.src.original}?auto=compress&w=${WIDTH}'`, height, width: WIDTH }
+					// const bili = item.width / WIDTH
+					// const height = item.height / bili
+					return { id: item.id, src: `${item.src.tiny}'`, height: item.height, width: item.width }
 				}),
 			)
 		}
@@ -48,14 +48,15 @@ const Gallery: FC = () => {
 	return (
 		<div className={styles.gallery}>
 			<div className={styles.wrapper}>
-				{imgs.map((i) => (
-					<div key={i.id} className={styles.item} style={{ width: (WIDTH * HEIGHT) / i.height ?? 0 }}>
-						<img
-							src={i.src}
-							// onLoad={(e) => handleImgLoad(e, i.id)}
-						/>
-					</div>
-				))}
+				{imgs.map((i) => {
+					const width = (i.width * HEIGHT) / i.height
+					return (
+						<div key={i.id} className={styles.item} style={{ flexBasis: width, flexGrow: (i.width * 10) / i.height }}>
+							<em style={{ paddingBottom: `${(i.height / i.width) * 100}%` }}></em>
+							<img src={i.src} />
+						</div>
+					)
+				})}
 			</div>
 		</div>
 	)

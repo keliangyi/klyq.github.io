@@ -1,0 +1,21 @@
+.section {
+	display: flex;
+	flex-wrap: wrap;
+
+	.box {
+		width: 200px;
+		flex-grow: 1;
+		position: relative;
+		margin: 4px;
+		background-color: #fff;
+		// &::after {
+		// 	content: '';
+
+		// }
+		span {
+			display: block;
+			height: 0;
+			padding-bottom: 100%;
+		}
+	}
+}

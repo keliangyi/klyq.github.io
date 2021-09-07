@@ -3,13 +3,20 @@ import { CSSProperties, FC, useState } from 'react'
 
 import styles from './css.less'
 
-const Tabbar: FC = () => {
-	const [active, setActive] = useState(0)
+const TYPES = {
+	home: Symbol.for('0'),
+	find: Symbol.for('1'),
+	message: Symbol.for('2'),
+	user: Symbol.for('3'),
+}
 
+const Tabbar: FC = () => {
+	// 为了 Symbol 而 Symbol
+	const [active, setActive] = useState<Symbol>(TYPES.home)
 	return (
 		<div className={styles.tabbars}>
-			<ul className={classNames(styles.tabbar1)} style={{ '--active-index': active } as CSSProperties}>
-				<li className={classNames(styles.item, active === 0 && styles.active)} onClick={() => setActive(0)}>
+			<ul className={classNames(styles.tabbar1)} style={{ '--active-index': Number(active?.description) } as CSSProperties}>
+				<li className={classNames(styles.item, active === TYPES.home && styles.active)} onClick={() => setActive(TYPES.home)}>
 					<svg
 						className={styles.icon}
 						viewBox="0 0 1024 1024"
@@ -27,7 +34,7 @@ const Tabbar: FC = () => {
 					</svg>
 					<span>Home</span>
 				</li>
-				<li className={classNames(styles.item, active === 1 && styles.active)} onClick={() => setActive(1)}>
+				<li className={classNames(styles.item, active === TYPES.find && styles.active)} onClick={() => setActive(TYPES.find)}>
 					<svg
 						className={styles.icon}
 						viewBox="0 0 1024 1024"
@@ -45,7 +52,7 @@ const Tabbar: FC = () => {
 					</svg>
 					<span>Explore</span>
 				</li>
-				<li className={classNames(styles.item, active === 2 && styles.active)} onClick={() => setActive(2)}>
+				<li className={classNames(styles.item, active === TYPES.message && styles.active)} onClick={() => setActive(TYPES.message)}>
 					<svg
 						className={styles.icon}
 						viewBox="0 0 1024 1024"
@@ -63,7 +70,7 @@ const Tabbar: FC = () => {
 					</svg>
 					<span>Collection</span>
 				</li>
-				<li className={classNames(styles.item, active === 3 && styles.active)} onClick={() => setActive(3)}>
+				<li className={classNames(styles.item, active === TYPES.user && styles.active)} onClick={() => setActive(TYPES.user)}>
 					<svg
 						className={styles.icon}
 						viewBox="0 0 1024 1024"
