@@ -2,6 +2,7 @@ import { FC, useEffect, CSSProperties } from 'react'
 import { useImmer } from '@/hooks'
 import { PEXELS_AUTHORIZATION } from '@/config'
 import styles from './gallery.less'
+import { Page } from '@/components'
 
 interface Iimage {
 	id: number
@@ -46,7 +47,7 @@ const Gallery: FC = () => {
 	}, [])
 
 	return (
-		<div className={styles.gallery}>
+		<Page className={styles.gallery}>
 			<div className={styles.wrapper}>
 				{imgs.map((i) => {
 					const width = (i.width * HEIGHT) / i.height
@@ -58,7 +59,7 @@ const Gallery: FC = () => {
 					)
 				})}
 			</div>
-		</div>
+		</Page>
 	)
 }
 
