@@ -1,5 +1,5 @@
 import { Draft } from 'immer'
-import { DependencyList, useEffect, useRef } from 'react'
+import { DependencyList, useEffect, useRef, useState } from 'react'
 import { useFn, useImmer } from '..'
 
 export interface IOptions<R extends any = unknown> extends RequestInit {
