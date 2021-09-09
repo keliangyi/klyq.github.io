@@ -47,7 +47,8 @@ const Gallery: FC = () => {
 
 	return (
 		<div className={styles.gallery}>
-			<div className={styles.wrapper}>
+			<section className={styles.top}>{/* <img src="" alt="" srcSet="" /> */}</section>
+			<section className={styles.wrapper}>
 				{imgs.map((i) => (
 					<div key={i.id} className={styles.item} style={{ width: (WIDTH * HEIGHT) / i.height ?? 0 }}>
 						<img
@@ -56,7 +57,7 @@ const Gallery: FC = () => {
 						/>
 					</div>
 				))}
-			</div>
+			</section>
 		</div>
 	)
 }
