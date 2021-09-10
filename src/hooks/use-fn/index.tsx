@@ -5,7 +5,7 @@ type Ifn = (...args: any[]) => any
 const useFn = <T extends Ifn>(fn: T) => {
 	const fnRef = useRef<T>(fn)
 	fnRef.current = fn
-	return useCallback(() => fnRef.current(), [fnRef])
+	return useCallback<T>(((...args) => fnRef.current(...args)) as T, [fnRef])
 }
 
 export default useFn

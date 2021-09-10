@@ -1,5 +1,5 @@
-import { FC, useEffect, CSSProperties } from 'react'
-import { useImmer } from '@/hooks'
+import { FC, useEffect, ChangeEvent, FormEvent } from 'react'
+import { useFetch, useFn, useImmer } from '@/hooks'
 import { PEXELS_AUTHORIZATION } from '@/config'
 import styles from './gallery.less'
 import { Page } from '@/components'
@@ -15,49 +15,67 @@ const WIDTH = 320
 const HEIGHT = 240
 
 const Gallery: FC = () => {
-	const [imgs, setImgs] = useImmer<Iimage[]>([])
+	const [state, setState] = useImmer({
+		query: 'mountain',
+	})
 
-	const getImgInfo = (src: string): Promise<HTMLImageElement> => {
-		return new Promise((resolve, reject) => {
-			const img = new Image()
-			img.onload = async function () {
-				resolve(img)
-			}
-			img.src = src + '?auto=compress&w=300'
-		})
-	}
-
-	useEffect(() => {
-		const getImgs = async () => {
-			const res = await fetch('https://api.pexels.com/v1/search?query=mountain&per_page=30', {
-				headers: {
-					Authorization: PEXELS_AUTHORIZATION,
-				},
+	const { data = [], run } = useFetch<Iimage[]>(`https://api.pexels.com/v1/search?query=${state.query}&per_page=30`, {
+		headers: {
+			Authorization: PEXELS_AUTHORIZATION,
+		},
+		formatResult(d) {
+			return d.photos.map((item: any) => {
+				return { id: item.id, src: `${item.src.tiny}'`, height: item.height, width: item.width }
 			})
-			const data = await res.json()
-			setImgs(
-				data.photos.map((item: any) => {
-					// const bili = item.width / WIDTH
-					// const height = item.height / bili
-					return { id: item.id, src: `${item.src.tiny}'`, height: item.height, width: item.width }
-				}),
-			)
-		}
-		getImgs()
-	}, [])
+		},
+	})
+
+	const handleInputChange = useFn((e: ChangeEvent<HTMLInputElement>) => {
+		e.persist()
+		setState((draft) => {
+			draft.query = e.target.value
+		})
+	})
+
+	const handleSearch = (e: FormEvent<HTMLFormElement>) => {
+		e.preventDefault()
+		run()
+	}
 
 	return (
 		<div className={styles.gallery}>
-			<section className={styles.top}>{/* <img src="" alt="" srcSet="" /> */}</section>
-			<section className={styles.wrapper}>
-				{imgs.map((i) => (
-					<div key={i.id} className={styles.item} style={{ width: (WIDTH * HEIGHT) / i.height ?? 0 }}>
-						<img
-							src={i.src}
-							// onLoad={(e) => handleImgLoad(e, i.id)}
-						/>
+			<section className={styles.top}>
+				<div className={styles.content}>
+					<h1 className={styles.title}>The best free stock photos shared by talented creators.</h1>
+					<div className={styles.searchBar}>
+						<form onSubmit={handleSearch}>
+							<input
+								type="text"
+								value={state.query}
+								className={styles.searchInput}
+								onChange={handleInputChange}
+								placeholder="搜索免费的图片"
+							/>
+						</form>
 					</div>
-				))}
+				</div>
+			</section>
+			<section className={styles.wrapper}>
+				{data.map((i) => {
+					const width = (i.width * HEIGHT) / i.height
+					return (
+						<a
+							href={i.src}
+							download="ad"
+							key={i.id}
+							className={styles.item}
+							style={{ flexBasis: width, flexGrow: (i.width * 10) / i.height }}
+						>
+							<em style={{ paddingBottom: `${(i.height / i.width) * 100}%` }}></em>
+							<img src={i.src} />
+						</a>
+					)
+				})}
 			</section>
 		</div>
 	)

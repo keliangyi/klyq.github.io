@@ -1,5 +1,5 @@
 import { Draft } from 'immer'
-import { DependencyList, useEffect, useRef, useState } from 'react'
+import { DependencyList, useEffect, useRef } from 'react'
 import { useFn, useImmer } from '..'
 
 export interface IOptions<R extends any = unknown> extends RequestInit {
@@ -88,7 +88,7 @@ function useFetch<T extends any = any>(url: string, options?: IOptions | Depende
 		if (!manual) {
 			run()
 		}
-	}, [])
+	}, deps)
 
 	return {
 		run,
