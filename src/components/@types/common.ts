@@ -1,6 +1,6 @@
 import { CSSProperties } from 'react'
 
-export interface IBasic {
+export interface IBase {
 	className?: string
 	style?: CSSProperties
 }

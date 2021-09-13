@@ -1,8 +1,8 @@
-import { FC, useEffect, ChangeEvent, FormEvent } from 'react'
+import { FC, useEffect, ChangeEvent, FormEvent, useRef } from 'react'
 import { useFetch, useFn, useImmer } from '@/hooks'
 import { PEXELS_AUTHORIZATION } from '@/config'
 import styles from './gallery.less'
-import { Page } from '@/components'
+import { Page, Icon } from '@/components'
 
 interface Iimage {
 	id: number
@@ -14,18 +14,34 @@ interface Iimage {
 const WIDTH = 320
 const HEIGHT = 240
 
+const CURATED = ['nature', 'mountain', 'sea']
+
 const Gallery: FC = () => {
+	const container = useRef<HTMLElement>(null)
+
 	const [state, setState] = useImmer({
-		query: 'mountain',
+		perfix: '',
+		query: '',
 	})
 
-	const { data = [], run } = useFetch<Iimage[]>(`https://api.pexels.com/v1/search?query=${state.query}&per_page=30`, {
+	const { data = [], run } = useFetch<Iimage[]>(`https://api.pexels.com/v1/search`, {
 		headers: {
 			Authorization: PEXELS_AUTHORIZATION,
 		},
+		method: 'get',
+		body: {
+			query: state.query || CURATED[Math.floor(Math.random() * CURATED.length)],
+			per_page: 30,
+		},
+		ref: container,
 		formatResult(d) {
 			return d.photos.map((item: any) => {
-				return { id: item.id, src: `${item.src.tiny}'`, height: item.height, width: item.width }
+				return {
+					id: item.id,
+					src: `${item.src.original}?auto=compress&cs=tinysrgb&h=300&end=1'`,
+					height: item.height,
+					width: item.width,
+				}
 			})
 		},
 	})
@@ -43,12 +59,14 @@ const Gallery: FC = () => {
 	}
 
 	return (
-		<div className={styles.gallery}>
+		<Page className={styles.gallery}>
 			<section className={styles.top}>
 				<div className={styles.content}>
-					<h1 className={styles.title}>The best free stock photos shared by talented creators.</h1>
+					<h1 className={styles.title}>
+						The best free stock photos shared by talented creators.
+					</h1>
 					<div className={styles.searchBar}>
-						<form onSubmit={handleSearch}>
+						<form onSubmit={handleSearch} className={styles.searchForm}>
 							<input
 								type="text"
 								value={state.query}
@@ -56,17 +74,20 @@ const Gallery: FC = () => {
 								onChange={handleInputChange}
 								placeholder="搜索免费的图片"
 							/>
+							<div className={styles.icon}>
+								<Icon type="icon-pubuliu" />
+							</div>
 						</form>
 					</div>
 				</div>
 			</section>
-			<section className={styles.wrapper}>
+			<section className={styles.wrapper} ref={container}>
 				{data.map((i) => {
 					const width = (i.width * HEIGHT) / i.height
 					return (
 						<a
-							href={i.src}
-							download="ad"
+							// href={i.src}
+							// download="ad"
 							key={i.id}
 							className={styles.item}
 							style={{ flexBasis: width, flexGrow: (i.width * 10) / i.height }}
@@ -77,7 +98,7 @@ const Gallery: FC = () => {
 					)
 				})}
 			</section>
-		</div>
+		</Page>
 	)
 }
 

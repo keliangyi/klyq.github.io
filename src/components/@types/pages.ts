@@ -1,5 +1,5 @@
-import { IBasic } from '.'
+import { IBase } from '.'
 
-export interface IPageProps extends IBasic {
+export interface IPageProps extends IBase {
 	title?: React.ReactNode
 }

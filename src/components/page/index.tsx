@@ -1,7 +1,6 @@
 import { FC } from 'react'
 import classNames from 'classnames'
 import { IPageProps } from '../@types'
-import './page.less'
 
 const Page: FC<IPageProps> = ({ children, className, style }) => {
 	return (

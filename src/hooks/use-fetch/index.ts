@@ -1,13 +1,17 @@
 import { Draft } from 'immer'
-import { DependencyList, useEffect, useRef } from 'react'
+import { DependencyList, RefObject, useEffect, useRef } from 'react'
 import { useFn, useImmer } from '..'
+import { objectToQueryString, throttle } from '@/util/index'
 
-export interface IOptions<R extends any = unknown> extends RequestInit {
+export interface IOptions<R extends any = unknown> extends Omit<RequestInit, 'body'> {
 	loadMore?: boolean
 	manual?: boolean
+	body?: Record<string, string | number>
+	ref?: RefObject<HTMLElement>
 	formatResult?: (res: any) => R
 	throwErrorWhen?: (res: any) => boolean
 	onSuccess?: (data: R) => void
+	onBottom?: () => void
 	onError?: (error: unknown) => void
 }
 
@@ -27,10 +31,30 @@ interface IState<D extends any = unknown> {
 function useFetch<T extends any = any>(url: string): IResult<T>
 function useFetch<T extends any = any>(url: string, options?: IOptions): IResult<T>
 function useFetch<T extends any = any>(url: string, deps?: DependencyList): IResult<T>
-function useFetch<T extends any = any>(url: string, options?: IOptions, deps?: DependencyList): IResult<T>
-function useFetch<T extends any = any>(url: string, options?: IOptions | DependencyList, deps: DependencyList = []): IResult<T> {
+function useFetch<T extends any = any>(
+	url: string,
+	options?: IOptions,
+	deps?: DependencyList,
+): IResult<T>
+function useFetch<T extends any = any>(
+	url: string,
+	options?: IOptions | DependencyList,
+	deps: DependencyList = [],
+): IResult<T> {
 	const isDeps = Array.isArray(options)
-	const { loadMore = false, manual = false, formatResult, throwErrorWhen, onError, onSuccess, ...fetchInit } = (isDeps ? {} : options) as IOptions
+	let {
+		loadMore = false,
+		manual = false,
+		body: _body,
+		ref,
+		method,
+		formatResult,
+		throwErrorWhen,
+		onError,
+		onSuccess,
+		onBottom,
+		...fetchInit
+	} = (isDeps ? {} : options) as IOptions
 	deps = isDeps ? options : deps
 
 	const [state, setState] = useImmer<IState<T>>({
@@ -50,13 +74,23 @@ function useFetch<T extends any = any>(url: string, options?: IOptions | Depende
 		setState((draft) => {
 			draft.loading = true
 		})
-
 		try {
 			const signal = controller.current.signal
+			let body: string | undefined = JSON.stringify(_body)
+			if (method === 'get') {
+				url += objectToQueryString(_body)
+				body = void 0
+			} else if (!method) {
+				if (_body && Object.keys(_body).length > 0) {
+					method = 'post'
+				}
+			}
 			const response = await fetch(
 				url,
 				Object.assign(fetchInit, {
 					signal,
+					body,
+					method,
 				}),
 			)
 			data = await response.json()
@@ -89,6 +123,22 @@ function useFetch<T extends any = any>(url: string, options?: IOptions | Depende
 			run()
 		}
 	}, deps)
+
+	useEffect(() => {
+		if (ref && ref.current) {
+			document.addEventListener(
+				'scroll',
+				throttle(function () {
+					const dom = ref!.current as HTMLElement
+					const lastChild = dom?.lastChild as HTMLElement
+					if (lastChild && lastChild.getBoundingClientRect().top < window.innerHeight) {
+						console.log('到底了！！')
+						onBottom && onBottom()
+					}
+				}, 600),
+			)
+		}
+	}, [ref])
 
 	return {
 		run,
