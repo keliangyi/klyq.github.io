@@ -34,6 +34,7 @@ const Gallery: FC = () => {
 			per_page: 30,
 		},
 		ref: container,
+		loadMore: true,
 		formatResult(d) {
 			return d.photos.map((item: any) => {
 				return {
@@ -62,9 +63,7 @@ const Gallery: FC = () => {
 		<Page className={styles.gallery}>
 			<section className={styles.top}>
 				<div className={styles.content}>
-					<h1 className={styles.title}>
-						The best free stock photos shared by talented creators.
-					</h1>
+					<h1 className={styles.title}>The best free stock photos shared by talented creators.</h1>
 					<div className={styles.searchBar}>
 						<form onSubmit={handleSearch} className={styles.searchForm}>
 							<input

@@ -18,12 +18,13 @@ export interface IOptions<R extends any = unknown> extends Omit<RequestInit, 'bo
 export interface IResult<R extends any = unknown> {
 	data: R
 	loading?: boolean
-	run: () => Promise<R>
+	run: (p?: Record<string, string | number>) => Promise<R>
 	abort: () => void
 }
 
 interface IState<D extends any = unknown> {
 	key: number
+	page: number
 	loading: boolean
 	data?: D
 }
@@ -31,21 +32,13 @@ interface IState<D extends any = unknown> {
 function useFetch<T extends any = any>(url: string): IResult<T>
 function useFetch<T extends any = any>(url: string, options?: IOptions): IResult<T>
 function useFetch<T extends any = any>(url: string, deps?: DependencyList): IResult<T>
-function useFetch<T extends any = any>(
-	url: string,
-	options?: IOptions,
-	deps?: DependencyList,
-): IResult<T>
-function useFetch<T extends any = any>(
-	url: string,
-	options?: IOptions | DependencyList,
-	deps: DependencyList = [],
-): IResult<T> {
+function useFetch<T extends any = any>(url: string, options?: IOptions, deps?: DependencyList): IResult<T>
+function useFetch<T extends any = any>(url: string, options?: IOptions | DependencyList, deps: DependencyList = []): IResult<T> {
 	const isDeps = Array.isArray(options)
 	let {
 		loadMore = false,
 		manual = false,
-		body: _body,
+		body: _body = {},
 		ref,
 		method,
 		formatResult,
@@ -59,6 +52,7 @@ function useFetch<T extends any = any>(
 
 	const [state, setState] = useImmer<IState<T>>({
 		loading: false,
+		page: 1,
 		key: 0,
 	})
 
@@ -69,13 +63,18 @@ function useFetch<T extends any = any>(
 		controller.current = new AbortController()
 	})
 
-	const run = useFn(async () => {
+	const run = useFn(async (params?: Record<string, string | number>) => {
 		let data: unknown
 		setState((draft) => {
 			draft.loading = true
+			draft.page++
 		})
 		try {
 			const signal = controller.current.signal
+
+			if (loadMore) {
+				_body.page = state.page
+			}
 			let body: string | undefined = JSON.stringify(_body)
 			if (method === 'get') {
 				url += objectToQueryString(_body)
@@ -85,14 +84,7 @@ function useFetch<T extends any = any>(
 					method = 'post'
 				}
 			}
-			const response = await fetch(
-				url,
-				Object.assign(fetchInit, {
-					signal,
-					body,
-					method,
-				}),
-			)
+			const response = await fetch(url, Object.assign(fetchInit, { signal, body, method }))
 			data = await response.json()
 			if (throwErrorWhen && throwErrorWhen(data)) {
 				throw new Error('用户自定义的错误')
@@ -124,21 +116,31 @@ function useFetch<T extends any = any>(
 		}
 	}, deps)
 
+	const loadMoreFn = useFn(
+		throttle(async () => {
+			if (ref && ref.current) {
+				const dom = ref!.current as HTMLElement
+				const lastChild = dom?.lastChild as HTMLElement
+				if (lastChild && lastChild.getBoundingClientRect().top < window.innerHeight) {
+					if (loadMore && !state.loading && state.key === 0) {
+						run()
+						console.log(4878)
+						setState((draft) => {
+							draft.key = 100
+						})
+					}
+					onBottom && onBottom()
+				}
+			}
+		}, 500),
+	)
+
 	useEffect(() => {
 		if (ref && ref.current) {
-			document.addEventListener(
-				'scroll',
-				throttle(function () {
-					const dom = ref!.current as HTMLElement
-					const lastChild = dom?.lastChild as HTMLElement
-					if (lastChild && lastChild.getBoundingClientRect().top < window.innerHeight) {
-						console.log('到底了！！')
-						onBottom && onBottom()
-					}
-				}, 600),
-			)
+			document.addEventListener('scroll', loadMoreFn)
 		}
-	}, [ref])
+		return () => {}
+	}, [ref, loadMore])
 
 	return {
 		run,
