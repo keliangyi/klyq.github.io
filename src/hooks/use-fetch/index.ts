@@ -3,10 +3,12 @@ import { DependencyList, RefObject, useEffect, useRef } from 'react'
 import { useFn, useImmer } from '..'
 import { objectToQueryString, throttle } from '@/util/index'
 
-export interface IOptions<R extends any = unknown> extends Omit<RequestInit, 'body'> {
+type IParams = Record<string, string | number>
+type MyRequestInit = Omit<RequestInit, 'body'> & { body: IParams }
+
+export interface IOptions<R extends any = unknown> extends MyRequestInit {
 	loadMore?: boolean
 	manual?: boolean
-	body?: Record<string, string | number>
 	ref?: RefObject<HTMLElement>
 	formatResult?: (res: any) => R
 	throwErrorWhen?: (res: any) => boolean
@@ -18,7 +20,7 @@ export interface IOptions<R extends any = unknown> extends Omit<RequestInit, 'bo
 export interface IResult<R extends any = unknown> {
 	data: R
 	loading?: boolean
-	run: (p?: Record<string, string | number>) => Promise<R>
+	run: (p?: IParams) => Promise<R>
 	abort: () => void
 }
 
@@ -27,6 +29,33 @@ interface IState<D extends any = unknown> {
 	page: number
 	loading: boolean
 	data?: D
+	cache?: { [key: string]: any }
+	dataList: any[]
+}
+
+async function request(url: string, p?: MyRequestInit): Promise<{ data: any; response: Response }> {
+	let data
+	let { body: bodyObj, method, ...fetchInit } = p as MyRequestInit
+	let body: string | undefined = ''
+	if (method === 'get') {
+		url += objectToQueryString(bodyObj)
+		body = void 0
+	} else if (!method) {
+		if (bodyObj && Object.keys(bodyObj).length > 0) {
+			method = 'post'
+		}
+	}
+	const response = await fetch(url, {
+		...fetchInit,
+		body,
+		method,
+	})
+	if (response.ok) {
+		data = await response.json()
+	} else {
+		throw new Error(response.statusText)
+	}
+	return { data, response }
 }
 
 function useFetch<T extends any = any>(url: string): IResult<T>
@@ -38,9 +67,8 @@ function useFetch<T extends any = any>(url: string, options?: IOptions | Depende
 	let {
 		loadMore = false,
 		manual = false,
-		body: _body = {},
+		body,
 		ref,
-		method,
 		formatResult,
 		throwErrorWhen,
 		onError,
@@ -54,6 +82,7 @@ function useFetch<T extends any = any>(url: string, options?: IOptions | Depende
 		loading: false,
 		page: 1,
 		key: 0,
+		dataList: [],
 	})
 
 	const controller = useRef(new AbortController())
@@ -63,29 +92,22 @@ function useFetch<T extends any = any>(url: string, options?: IOptions | Depende
 		controller.current = new AbortController()
 	})
 
-	const run = useFn(async (params?: Record<string, string | number>) => {
-		let data: unknown
+	const run = useFn(async function (params?: IParams) {
+		const signal = controller.current.signal
+		params = params ?? {}
 		setState((draft) => {
 			draft.loading = true
-			draft.page++
+			if (loadMore) {
+				params!.page = draft.page
+				draft.page++
+			}
 		})
 		try {
-			const signal = controller.current.signal
-
-			if (loadMore) {
-				_body.page = state.page
-			}
-			let body: string | undefined = JSON.stringify(_body)
-			if (method === 'get') {
-				url += objectToQueryString(_body)
-				body = void 0
-			} else if (!method) {
-				if (_body && Object.keys(_body).length > 0) {
-					method = 'post'
-				}
-			}
-			const response = await fetch(url, Object.assign(fetchInit, { signal, body, method }))
-			data = await response.json()
+			let { data } = await request(url, {
+				body: Object.assign(body, params),
+				signal,
+				...fetchInit,
+			})
 			if (throwErrorWhen && throwErrorWhen(data)) {
 				throw new Error('用户自定义的错误')
 			}
@@ -96,17 +118,21 @@ function useFetch<T extends any = any>(url: string, options?: IOptions | Depende
 				onSuccess(data)
 			}
 			setState((draft) => {
-				draft.data = data as Draft<T>
+				if (loadMore) {
+					//@ts-ignore
+					draft.data = (draft.data ?? []).concat(data)
+				} else {
+					draft.data = data
+				}
 			})
+			return data
 		} catch (error) {
-			console.log(error)
+			console.error(error)
 			onError && onError(error)
 		} finally {
 			setState((draft) => {
 				draft.loading = false
 			})
-			console.log('finally')
-			return data ?? state.data
 		}
 	})
 
@@ -122,12 +148,8 @@ function useFetch<T extends any = any>(url: string, options?: IOptions | Depende
 				const dom = ref!.current as HTMLElement
 				const lastChild = dom?.lastChild as HTMLElement
 				if (lastChild && lastChild.getBoundingClientRect().top < window.innerHeight) {
-					if (loadMore && !state.loading && state.key === 0) {
+					if (loadMore && !state.loading) {
 						run()
-						console.log(4878)
-						setState((draft) => {
-							draft.key = 100
-						})
 					}
 					onBottom && onBottom()
 				}
@@ -137,9 +159,11 @@ function useFetch<T extends any = any>(url: string, options?: IOptions | Depende
 
 	useEffect(() => {
 		if (ref && ref.current) {
-			document.addEventListener('scroll', loadMoreFn)
+			window.addEventListener('scroll', loadMoreFn)
 		}
-		return () => {}
+		return () => {
+			window.removeEventListener('scroll', loadMoreFn)
+		}
 	}, [ref, loadMore])
 
 	return {
