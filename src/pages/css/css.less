@@ -113,3 +113,45 @@
 		cursor: ew-resize;
 	}
 }
+
+.AbsoluteMargin {
+	.wrap {
+		position: relative;
+		width: 600px;
+		&::after {
+			content: '';
+			clear: both;
+		}
+		// overflow: hidden;
+		* {
+			box-sizing: border-box;
+		}
+		.item {
+			position: absolute;
+			width: 300px;
+			background-color: #eee;
+			border: 1px solid red;
+			padding: 10px;
+			// overflow: hidden;
+			&:nth-child(1) {
+				top: 0;
+			}
+			&:nth-child(2) {
+				top: 0;
+				left: 300px;
+			}
+			&:nth-child(3) {
+				top: 169px;
+				left: 0;
+			}
+			.box {
+				padding: 10px;
+				background-color: lightcoral;
+			}
+			img {
+				width: 100%;
+				background-color: lightblue;
+			}
+		}
+	}
+}

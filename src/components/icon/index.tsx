@@ -14,17 +14,11 @@ const iconCreator = (url: string): FC<IconProps> => {
 		document.body.appendChild(script)
 	}
 
-	const Icon: FC<IconProps> = ({ type, className, style }) => {
+	const Icon: FC<IconProps> = ({ type, className, ...props }) => {
 		Icon.displayName = 'Iconfont'
 		return (
-			<i className={classNames('c-icon', className)} style={style}>
-				<svg
-					width="1em"
-					height="1em"
-					fill="currentColor"
-					viewBox="0 0 32 32"
-					aria-hidden="true"
-				>
+			<i className={classNames('c-icon', className)} {...props}>
+				<svg width="1em" height="1em" fill="currentColor" viewBox="0 0 32 32" aria-hidden="true">
 					<use xlinkHref={`#${type}`} />
 				</svg>
 			</i>
