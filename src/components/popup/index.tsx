@@ -5,8 +5,9 @@ import ReactDOM from 'react-dom'
 import { IPopupProps } from '../@types/popup'
 import './popup.less'
 
-const Popup: FC<IPopupProps> = ({ visible, scroll, getContainer, children }) => {
+const Popup: FC<IPopupProps> = ({ visible, getContainer, children }) => {
 	const once = useRef(true)
+
 	const containerFn = useFn(() => {
 		if (getContainer) {
 			if (typeof getContainer === 'string') {
@@ -19,7 +20,6 @@ const Popup: FC<IPopupProps> = ({ visible, scroll, getContainer, children }) => 
 		}
 		return document.body
 	})
-	const container = useRef(containerFn())
 
 	const handleAnimationEnd = (e: AnimationEvent<HTMLDivElement>) => {
 		const popup = e.target as HTMLElement
@@ -30,15 +30,16 @@ const Popup: FC<IPopupProps> = ({ visible, scroll, getContainer, children }) => 
 	}
 
 	useEffect(() => {
-		if (scroll) {
+		const scrollLock = getContainer !== false
+		if (scrollLock) {
 			document.body.style.cssText = visible ? 'overflow:hidden' : ''
 		}
 		return () => {
-			if (scroll) {
+			if (scrollLock) {
 				document.body.style.cssText = ''
 			}
 		}
-	}, [visible, scroll])
+	}, [visible, getContainer])
 
 	const renderPortal = useFn(() => {
 		const cls = classNames('popup', {
@@ -55,11 +56,13 @@ const Popup: FC<IPopupProps> = ({ visible, scroll, getContainer, children }) => 
 		)
 		return content
 	})
+
 	if (once.current && !visible) {
 		once.current = false
 		return null
 	}
-	return ReactDOM.createPortal(renderPortal(), container.current)
+
+	return ReactDOM.createPortal(renderPortal(), containerFn())
 }
 
 export default Popup

@@ -1,13 +1,11 @@
+import { useInterval } from '@/hooks'
 import classNames from 'classnames'
 import { FC, useEffect } from 'react'
 import { Popup } from '..'
 import { IToastProps } from '../@types/toast'
 import './toast.less'
 
-const Toast: FC<IToastProps> & { show: () => any } = ({ className, children, ...popup }) => {
-	useEffect(() => {
-		// Toast.show()
-	}, [popup.visible])
+const Toast: FC<IToastProps> = ({ className, children, ...popup }) => {
 	return (
 		<Popup {...popup}>
 			<div className={classNames('toast', className)}>
@@ -16,6 +14,5 @@ const Toast: FC<IToastProps> & { show: () => any } = ({ className, children, ...
 		</Popup>
 	)
 }
-Toast.show = function () {}
 
 export default Toast
