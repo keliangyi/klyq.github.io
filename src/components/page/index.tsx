@@ -1,13 +1,9 @@
 import { FC } from 'react'
-import classNames from 'classnames'
 import { IPageProps } from '../@types'
+import Base from '../base'
 
-const Page: FC<IPageProps> = ({ children, className, style }) => {
-	return (
-		<section className={classNames('page', className)} style={style}>
-			{children}
-		</section>
-	)
+const Page: FC<IPageProps> = ({ children, perfix, title, ...rest }) => {
+	return <section {...rest}>{children}</section>
 }
 
-export default Page
+export default Base(Page)

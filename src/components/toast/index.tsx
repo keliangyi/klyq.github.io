@@ -3,6 +3,7 @@ import classNames from 'classnames'
 import { FC, useEffect } from 'react'
 import { Popup } from '..'
 import { IToastProps } from '../@types/toast'
+import Base from '../base'
 import './toast.less'
 
 const Toast: FC<IToastProps> = ({ className, children, ...popup }) => {
@@ -15,4 +16,4 @@ const Toast: FC<IToastProps> = ({ className, children, ...popup }) => {
 	)
 }
 
-export default Toast
+export default Base(Toast)

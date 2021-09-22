@@ -3,6 +3,7 @@ import classNames from 'classnames'
 import { AnimationEvent, FC, useEffect, useRef } from 'react'
 import ReactDOM from 'react-dom'
 import { IPopupProps } from '../@types/popup'
+import Base from '../base'
 import './popup.less'
 
 const Popup: FC<IPopupProps> = ({ visible, getContainer, children }) => {
@@ -65,4 +66,4 @@ const Popup: FC<IPopupProps> = ({ visible, getContainer, children }) => {
 	return ReactDOM.createPortal(renderPortal(), containerFn())
 }
 
-export default Popup
+export default Base(Popup)

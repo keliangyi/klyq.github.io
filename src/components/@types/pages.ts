@@ -1,5 +1,5 @@
 import { IBase } from '.'
 
-export interface IPageProps extends Omit<IBase, 'title'> {
+export interface IPageProps extends IBase {
 	title?: React.ReactNode
 }

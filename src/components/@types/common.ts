@@ -1,6 +1,7 @@
 import { CSSProperties, HTMLAttributes } from 'react'
 
-export interface IBase extends HTMLAttributes<HTMLElement> {
-	// className?: string
-	// style?: CSSProperties
+export interface IBase {
+	perfix: string
+	className?: string
+	style?: CSSProperties
 }

@@ -1,6 +1,7 @@
 import classNames from 'classnames'
 import { FC, FunctionComponent } from 'react'
 import { IconProps } from '../@types'
+import Base from '../base'
 import './icon.less'
 
 const scripts = new Set<string>()
@@ -30,4 +31,4 @@ const iconCreator = (url: string): FC<IconProps> => {
 
 const Icon = iconCreator('//at.alicdn.com/t/font_2808707_2qg8we6vbky.js')
 
-export default Icon
+export default Base(Icon)
