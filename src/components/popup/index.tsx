@@ -66,4 +66,4 @@ const Popup: FC<IPopupProps> = ({ visible, getContainer, children }) => {
 	return ReactDOM.createPortal(renderPortal(), containerFn())
 }
 
-export default Base(Popup)
+export default Base<IPopupProps>(Popup)

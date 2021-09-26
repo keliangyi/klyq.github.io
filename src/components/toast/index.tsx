@@ -1,12 +1,13 @@
 import { useInterval } from '@/hooks'
 import classNames from 'classnames'
-import { FC, useEffect } from 'react'
+import { FC, memo, useEffect } from 'react'
 import { Popup } from '..'
 import { IToastProps } from '../@types/toast'
 import Base from '../base'
 import './toast.less'
 
-const Toast: FC<IToastProps> = ({ className, children, ...popup }) => {
+const Toast: FC<IToastProps> = memo(({ className, children, ...popup }) => {
+	console.log('Toast  rendered')
 	return (
 		<Popup {...popup}>
 			<div className={classNames('toast', className)}>
@@ -14,6 +15,6 @@ const Toast: FC<IToastProps> = ({ className, children, ...popup }) => {
 			</div>
 		</Popup>
 	)
-}
+})
 
-export default Base(Toast)
+export default Base<IToastProps>(Toast)

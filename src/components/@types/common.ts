@@ -1,7 +1,7 @@
 import { CSSProperties, HTMLAttributes } from 'react'
 
 export interface IBase {
-	perfix: string
+	perfix?: string
 	className?: string
 	style?: CSSProperties
 }

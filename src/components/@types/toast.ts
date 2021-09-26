@@ -1,3 +1,5 @@
 import { IPopupProps } from './popup'
 
-export interface IToastProps extends IPopupProps {}
+export interface IToastProps extends IPopupProps {
+	sc?: number
+}

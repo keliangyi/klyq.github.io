@@ -1,9 +1,9 @@
-import { FC } from 'react'
+import { FC, memo } from 'react'
 import { IPageProps } from '../@types'
 import Base from '../base'
 
-const Page: FC<IPageProps> = ({ children, perfix, title, ...rest }) => {
+const Page: FC<IPageProps> = memo(({ children, perfix, title, ...rest }) => {
 	return <section {...rest}>{children}</section>
-}
+})
 
-export default Base(Page)
+export default Base<IPageProps>(Page)
