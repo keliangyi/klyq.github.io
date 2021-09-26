@@ -11,6 +11,8 @@ export default function IndexPage() {
 			<Link to="/css/tabbar">tabbar 背景色</Link>
 			<Link to="/css/grayscale">grayscale</Link>
 			<Link to="/css/gallery">gallery</Link>
+			<Link to="/canvas/ggk">刮刮卡</Link>
+			<Link to="/canvas/ball">小球</Link>
 		</div>
 		// <Redirect to="/clock"/>
 	)
