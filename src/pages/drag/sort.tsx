@@ -11,7 +11,7 @@ interface SortableProps<T = any> {
 
 const Sortable: FC<SortableProps> = ({ list, renderItem }) => {
 	const [data, setData] = useImmer(list)
-	const dragIndex = useRef<number>(0)
+	const [dragIndex, setDragIndex] = useImmer<number>(-1)
 
 	useEffect(() => {
 		setData(list)
@@ -21,10 +21,16 @@ const Sortable: FC<SortableProps> = ({ list, renderItem }) => {
 		e.preventDefault()
 	})
 
+	const handleDragStart = (idx: number) => {
+		setDragIndex(idx)
+	}
+	const handleDragEnd = () => {
+		setDragIndex(-1)
+	}
 	const handleDragOver = debounce((e: DragEvent<HTMLDivElement>, overIndex: number) => {
 		e.preventDefault()
 		setData((draft) => {
-			draft.splice(overIndex, 0, draft.splice(dragIndex.current, 1)[0])
+			draft.splice(overIndex, 0, draft.splice(dragIndex, 1)[0])
 		})
 	}, 100)
 
@@ -35,8 +41,9 @@ const Sortable: FC<SortableProps> = ({ list, renderItem }) => {
 					key={idx}
 					className={classNames(styles.item, styles.animate)}
 					draggable
-					// style={{ opacity:dragIndex === idx ? 0 : 1 }}
-					onDragStart={() => (dragIndex.current = idx)}
+					// style={{ opacity: dragIndex === idx ? 0 : 1 }}
+					onDragStart={() => handleDragStart(idx)}
+					onDragEnd={handleDragEnd}
 					onDrop={(e) => handleDrop(e)}
 					onDragOver={(e) => handleDragOver(e, idx)}
 				>

@@ -2,7 +2,8 @@
 	position: relative;
 	width: 1100px;
 	margin: 10vh auto;
-	box-shadow: 0 0 20px -5px rgba(0, 0, 0, 0.5);
+	box-shadow: var(--box-shadow);
+
 	canvas {
 		display: block;
 		position: relative;
@@ -23,5 +24,8 @@
 }
 
 .ball {
+	position: fixed;
+	top: 0;
+	left: 0;
 	background-color: rgb(228, 209, 209);
 }

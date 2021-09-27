@@ -1,0 +1,26 @@
+.hotmap {
+	text-align: center;
+	.box {
+		display: inline-block;
+		margin: 10% 0;
+		padding: 24px;
+		background-color: #fff;
+		box-shadow: var(--box-shadow);
+		border-radius: 6px;
+	}
+	svg {
+		display: block;
+		rect {
+			fill: #ebedf0;
+			&[data-level='1'] {
+				fill: #9be9a8;
+			}
+			&[data-level='2'] {
+				fill: #40c463;
+			}
+			&[data-level='3'] {
+				fill: #216e39;
+			}
+		}
+	}
+}
