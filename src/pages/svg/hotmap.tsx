@@ -18,7 +18,6 @@ const HotMap: FC = () => {
 				return new Date(today.getTime() - i * oneDay)
 			})
 	})
-	console.log(date)
 
 	const dateGroup = useMemo(() => {
 		return date.reduceRight((a, c, idx) => {
