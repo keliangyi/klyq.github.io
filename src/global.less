@@ -2,12 +2,43 @@
 	margin: 0;
 	padding: 0;
 	list-style: none;
+	box-sizing: border-box;
 }
 
 :root {
 	--box-shadow: 0 0 20px -5px rgba(0, 0, 0, 0.25);
 }
 
+a {
+	color: rgba(0, 0, 0, 0.85);
+}
+
 body {
 	background-color: #eceffc45;
+	color: rgba(0, 0, 0, 0.85);
+}
+
+.hide-scrollbar {
+	&::-webkit-scrollbar {
+		display: none;
+		// width: 10px;
+		// height: 10px;
+		// background-color: rgb(224, 21, 21);
+	}
+
+	/*定义滚动条轨道 内阴影+圆角*/
+	&::-webkit-scrollbar-track {
+		display: none;
+		// box-shadow: inset 0 0 0px rgba(240, 240, 240, 0.5);
+		// border-radius: 10px;
+		// background-color: rgba(240, 240, 240, 0.5);
+	}
+
+	/*定义滑块 内阴影+圆角*/
+	&::-webkit-scrollbar-thumb {
+		display: none;
+		// border-radius: 10px;
+		// box-shadow: inset 0 0 0px rgba(240, 240, 240, 0.5);
+		// background-color: rgba(0, 0, 0, 0.171);
+	}
 }

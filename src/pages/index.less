@@ -1,14 +1,104 @@
 .home {
-	display: flex;
-	padding: 0 6px;
-	flex-wrap: wrap;
-	a {
+	.logo {
+		display: inline-block;
+		width: 100px;
+		height: 60px;
+		background-image: url(../../public/logo.jpg);
+		background-position: center;
+		transform: scale(0.6) translateX(-40%);
+		span {
+			visibility: hidden;
+		}
+	}
+
+	.content {
 		display: flex;
-		align-items: center;
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100vw;
+		height: 100vh;
+		overflow: hidden;
+	}
+
+	.side {
+		position: relative;
+		z-index: 2;
+		height: 100vh;
+		flex-basis: 320px;
+		flex-shrink: 0;
+		background-color: #151317;
+		box-shadow: 10px 0 20px -5px rgba(0, 0, 0, 0.5);
+		.wrapper {
+			padding: 24px;
+			color: #fff;
+			a {
+				color: #fff;
+				text-decoration: none;
+			}
+			.slogan {
+				position: absolute;
+				top: 50%;
+				left: 24px;
+				line-height: 1.8;
+				transform: translateY(-50%);
+				h1 {
+					margin-bottom: 24px;
+					font-size: 36px;
+				}
+			}
+		}
+	}
+
+	.menu {
+		flex: 1;
+		padding: 24px 0 24px 24px;
+		display: flex;
+		flex-direction: column;
 		justify-content: center;
-		width: 300px;
-		height: 300px;
-		margin: 12px 6px;
-		background-color: #fff;
+		overflow: hidden;
+		ul {
+			flex-shrink: 0;
+			flex-grow: 0;
+			position: relative;
+			// border: 1px solid red;
+			overflow: hidden;
+			display: flex;
+			flex-direction: column;
+
+			li {
+				display: block;
+				padding: var(--itemPadding);
+				position: absolute;
+				top: 0;
+				left: 0;
+				transition: all 0.6s;
+			}
+			.box {
+				display: block;
+				// width: inherit;
+				height: var(--itemHeight);
+				box-shadow: var(--box-shadow);
+				background-color: #fff;
+				border-radius: 8px;
+				text-decoration: none;
+				overflow: hidden;
+				position: relative;
+
+				.info {
+					position: absolute;
+					left: 12px;
+					bottom: 12px;
+					color: #fff;
+				}
+			}
+			img {
+				display: block;
+				// width: 100%;
+				width: auto;
+				height: 100%;
+				object-fit: cover;
+			}
+		}
 	}
 }

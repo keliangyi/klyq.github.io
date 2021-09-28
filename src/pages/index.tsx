@@ -1,20 +1,140 @@
-import { Redirect, Link } from 'umi'
-
+import { useMemo, CSSProperties, useEffect } from 'react'
+import { Link } from 'umi'
+import { Page } from '@/components'
+import { useImmer } from '@/hooks'
+import { throttle } from '@/util'
+import { Ipost, menu } from './menu'
 import styles from './index.less'
 
+interface IWaterFall {
+	list: Array<Ipost & { style: CSSProperties }>
+	maxWidth: CSSProperties['width']
+	maxHeight: CSSProperties['height']
+	maxLen: number
+}
+
+const FIXEDHEIGHT = 260
+const PADDING = 12 * 2
+
 export default function IndexPage() {
+	const [post] = useImmer<Array<Ipost>>(menu)
+	const [state, setState] = useImmer({
+		scroll: 0,
+		vh: 0,
+	})
+	const handleScroll = () => {
+		const scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+		setState((draft) => {
+			draft.scroll = scrollTop
+		})
+	}
+	const handleResize = throttle(function () {
+		setState((draft) => {
+			if (draft.vh !== window.innerHeight) {
+				draft.vh = window.innerHeight
+			}
+		})
+	}, 500)
+
+	useEffect(() => {
+		document.body.classList.add('hide-scrollbar')
+		window.addEventListener('scroll', handleScroll)
+		window.addEventListener('resize', handleResize)
+		return () => {
+			document.body.classList.remove('hide-scrollbar')
+			window.removeEventListener('scroll', handleScroll)
+			window.removeEventListener('resize', handleResize)
+		}
+	}, [])
+
+	const waterFall = useMemo<IWaterFall>(() => {
+		const columns: Array<number> = []
+		let maxWidth: CSSProperties['width'] = 'auto'
+		let maxHeight: CSSProperties['height'] = 'auto'
+		let maxLen = 1
+		const list = post.map((i, idx) => {
+			maxLen = Math.floor(innerHeight / (FIXEDHEIGHT + PADDING))
+			const or = FIXEDHEIGHT / (i.height / i.width)
+			const width = or + PADDING
+			let style: CSSProperties = {}
+			let y = 0
+			let x = 0
+			maxHeight = maxLen * (FIXEDHEIGHT + PADDING)
+			if (idx < maxLen) {
+				columns.push(width)
+				y = (FIXEDHEIGHT + PADDING) * idx
+			} else {
+				const min = Math.min(...columns)
+				const minIndex = columns.indexOf(min)
+				x = min
+				y = minIndex * (FIXEDHEIGHT + PADDING)
+				columns[minIndex] = min + width
+			}
+			maxWidth = Math.max(...columns)
+			style = {
+				transform: `translateX(${x}px) translateY(${y}px)`,
+				width,
+			}
+
+			return {
+				...i,
+				style,
+			}
+		})
+		return {
+			list,
+			maxHeight,
+			maxWidth,
+			maxLen,
+		}
+	}, [post, state.vh])
+
 	return (
-		<div className={styles.home}>
-			<Link to="/clock">clock</Link>
-			<Link to="/drag">drag</Link>
-			<Link to="/drag/sort">sort</Link>
-			<Link to="/css/tabbar">tabbar 背景色</Link>
-			<Link to="/css/grayscale">grayscale</Link>
-			<Link to="/css/gallery">gallery</Link>
-			<Link to="/canvas/ggk">刮刮卡</Link>
-			<Link to="/canvas/ball">小球</Link>
-			<Link to="/svg/hotmap">提交次数</Link>
-		</div>
-		// <Redirect to="/clock"/>
+		<Page className={styles.home}>
+			<div className={styles.scroll} style={{ height: typeof waterFall.maxWidth === 'number' ? waterFall.maxWidth : 'auto' }}></div>
+			<div className={styles.content}>
+				<aside className={styles.side}>
+					<div className={styles.wrapper}>
+						<a href="/" className={styles.logo}>
+							<span>记衣</span>
+						</a>
+						<div className={styles.slogan}>
+							<h1>
+								观书有会意处，
+								<br />
+								题其衣裳，
+								<br />
+								以记其事
+							</h1>
+							<p>王嘉《拾遗记》</p>
+						</div>
+					</div>
+				</aside>
+				<div className={styles.menu}>
+					<ul
+						style={
+							{
+								height: waterFall.maxHeight,
+								width: waterFall.maxWidth,
+								transform: `translateX(-${state.scroll}px) `,
+								'--itemHeight': FIXEDHEIGHT + 'px',
+								'--itemPadding': PADDING / 2 + 'px',
+							} as CSSProperties
+						}
+					>
+						{waterFall.list.map((i, idx) => (
+							<li key={i.id} style={{ ...i.style }}>
+								<Link to={i.link} className={styles.box}>
+									<img src={i.url + '?auto=compress&cs=tinysrgb&w=600&end=1'} />
+									<div className={styles.info}>
+										<h2>{i.title}</h2>
+									</div>
+								</Link>
+							</li>
+						))}
+					</ul>
+				</div>
+			</div>
+		</Page>
 	)
 }
