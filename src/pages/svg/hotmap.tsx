@@ -12,31 +12,42 @@ const format = (date: Date): string => {
 const HotMap: FC = () => {
 	const [date, setDate] = useImmer(() => {
 		const today = new Date()
-		return Array.from(new Array(365).keys())
-			.reverse()
+		return Array.from(new Array(365 + today.getDay()).keys())
 			.map((i) => {
 				return new Date(today.getTime() - i * oneDay)
 			})
+			.reverse()
 	})
 
 	const dateGroup = useMemo(() => {
-		return date.reduceRight((a, c, idx) => {
-			const key = Math.floor((idx + 2) / 7)
-			return {
-				...a,
-				[key]: (a[key] || []).concat(c),
-			}
-		}, {} as { [key: number]: Date[] })
+		return date.reduce(
+			(a, c) => {
+				c.getDay() === 0 ? a.push([c]) : a[a.length - 1].push(c)
+				return a
+			},
+			[[]] as Date[][],
+		)
 	}, [date])
 
 	return (
 		<Page className={styles.hotmap}>
 			<div className={styles.box}>
-				<svg width={24 * Object.entries(dateGroup).length} height={24 * 7 - 4}>
-					{Object.entries(dateGroup).map(([week, val]) => {
+				<svg width={24 * dateGroup.length + 20} height={24 * 7 - 4}>
+					<g>
+						<text x={0} y={38}>
+							Mon
+						</text>
+						<text x={0} y={88}>
+							Wed
+						</text>
+						<text x={0} y={135}>
+							Fri
+						</text>
+					</g>
+					{dateGroup.map((week, gid) => {
 						return (
-							<g key={week} transform={`translate(${24 * Number(week)})`}>
-								{val.map((day, idx) => (
+							<g key={gid} transform={`translate(${18 + 24 * gid})`}>
+								{week.map((day, idx) => (
 									<rect
 										key={day.getTime()}
 										data-level={Math.floor(Math.random() * 3)}
