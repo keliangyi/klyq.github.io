@@ -102,9 +102,8 @@ export default function IndexPage() {
 							<h1>
 								观书有会意处，
 								<br />
-								题其衣裳，
-								<br />
-								以记其事
+								题其<span className="danger-color">衣</span>裳，
+								<br />以<span className="primary-color">记</span>其事
 							</h1>
 							<p>王嘉《拾遗记》</p>
 						</div>

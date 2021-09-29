@@ -52,3 +52,7 @@ export const throttle = (fn: Function, wait: number) => {
 		}
 	}
 }
+
+export const betweenRandom = (min: number, max: number) => {
+	return Math.random() * (max - min) + min
+}

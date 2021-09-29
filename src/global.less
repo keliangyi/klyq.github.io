@@ -6,6 +6,9 @@
 }
 
 :root {
+	--primary-color: #00c3ff;
+	--danger-color: #ffe14c;
+
 	--box-shadow: 0 0 20px -5px rgba(0, 0, 0, 0.25);
 }
 
@@ -16,6 +19,13 @@ a {
 body {
 	background-color: #eceffc45;
 	color: rgba(0, 0, 0, 0.85);
+}
+
+.primary-color {
+	color: var(--primary-color) !important;
+}
+.danger-color {
+	color: var(--danger-color) !important;
 }
 
 .hide-scrollbar {

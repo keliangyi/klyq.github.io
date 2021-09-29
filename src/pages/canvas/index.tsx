@@ -1,7 +1,8 @@
-import { FC, useEffect } from 'react'
+import { FC, useEffect, useRef, MouseEvent } from 'react'
 import { Canvas, Page } from '@/components'
-import { useFn, useImmer } from '@/hooks'
+import { useFn, useImmer, useRAF } from '@/hooks'
 import { ISize } from '@/components/canvas'
+import { betweenRandom, throttle } from '@/util'
 
 const w = innerWidth
 const h = innerHeight
@@ -13,34 +14,35 @@ class Particle {
 	size: number
 	speedX: number
 	speedY: number
+	hue: number
 
-	constructor(ctx: CanvasRenderingContext2D) {
+	constructor(ctx: CanvasRenderingContext2D, x?: number, y?: number, hue?: number) {
 		this.ctx = ctx
-		this.size = Math.random() * 50 + 1
-		this.x = Math.random() * w + 1
-		this.y = Math.random() * h + 1
-
-		this.speedX = Math.random() * 3 - 1.5
-		this.speedY = Math.random() * 3 - 1.5
+		this.size = Math.random() * 30 + 1
+		this.x = x ?? betweenRandom(this.size, w - this.size)
+		this.y = y ?? betweenRandom(this.size, h - this.size)
+		this.speedX = Math.random() * 6 - 3
+		this.speedY = Math.random() * 6 - 3
+		this.hue = hue ?? 0
 	}
 
 	update() {
-		if (this.x + this.size >= innerWidth || this.x - this.size <= 0) {
+		if (this.x + this.size >= innerWidth || this.x - this.size < 0) {
 			this.speedX = -this.speedX
 		}
-		if (this.y + this.size >= innerHeight || this.y - this.size <= 0) {
+		if (this.y + this.size >= innerHeight || this.y - this.size < 0) {
 			this.speedY = -this.speedY
 		}
 		this.x += this.speedX
 		this.y += this.speedY
-		if (this.size > 2) {
-			this.size -= 0.1
+		if (this.size > 5) {
+			this.size -= 0.5
 		}
 	}
 
-	draw() {
+	draw(hue: number) {
 		const { ctx } = this
-		ctx.fillStyle = '#58b368'
+		ctx.fillStyle = `hsl(${hue},100%,50%)`
 		ctx.beginPath()
 		ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2)
 		ctx.fill()
@@ -49,31 +51,52 @@ class Particle {
 
 const Frank: FC = () => {
 	const [particles, setParticle] = useImmer<Particle[]>([])
+	const ctx = useRef<CanvasRenderingContext2D>()
+	const hue = useRef(0)
+	const { animate } = useRAF((ctx: CanvasRenderingContext2D, time = 0) => {
+		ctx.clearRect(0, 0, window.innerWidth, window.innerHeight)
+		// ctx.fillStyle = '#000'
+		// ctx.fillRect(0, 0, w, h)
+
+		clearParticle()
+		draw()
+		hue.current += 2
+	})
+
+	const clearParticle = useFn(() => {
+		if (particles.length !== 0) {
+			setParticle((draft) => {
+				return draft.filter((f) => f.size > 5)
+			})
+		}
+	})
 
 	const handleCanvasReady = useFn((ctx: CanvasRenderingContext2D) => {
-		const ps = Array.from(new Array(500).keys()).map(() => new Particle(ctx))
-		console.log(ps)
-
-		setParticle(ps)
 		animate(ctx)
 	})
 
 	const draw = useFn(() => {
 		particles.forEach((i) => {
 			i.update()
-			i.draw()
+			i.draw(hue.current)
 		})
 	})
 
-	function animate(ctx: CanvasRenderingContext2D) {
-		ctx.clearRect(0, 0, window.innerWidth, window.innerHeight)
-		draw()
-		requestAnimationFrame(animate.bind(null, ctx))
+	const handleMouseMove = ({ pageX, pageY }: MouseEvent<HTMLCanvasElement>) => {
+		if (ctx.current) {
+			setParticle((draft) => {
+				const c: any[] = []
+				for (let i = 0; i < 20; i++) {
+					c.push(new Particle(ctx.current!, pageX, pageY))
+				}
+				return draft.concat(c)
+			})
+		}
 	}
 
 	return (
 		<Page>
-			<Canvas resize className="resizeCanvas" onMount={handleCanvasReady} />
+			<Canvas resize className="resizeCanvas" onMount={handleCanvasReady} onMouseMove={handleMouseMove} />
 		</Page>
 	)
 }

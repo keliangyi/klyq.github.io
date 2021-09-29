@@ -30,6 +30,6 @@ const iconCreator = (url: string): FC<IconProps> => {
 	return Icon
 }
 
-const Icon = iconCreator('//at.alicdn.com/t/font_2808707_2qg8we6vbky.js')
+const Icon = iconCreator('//at.alicdn.com/t/font_2808707_28o0uqep6m4.js')
 
 export default Base<IconProps>(Icon)

@@ -82,4 +82,28 @@ export const menu: Ipost[] = [
 		height: 3560,
 		url: 'https://images.pexels.com/photos/1693095/pexels-photo-1693095.jpeg',
 	},
+	{
+		id: 9,
+		title: 'grid 计算器',
+		link: '/css/grid/calculator',
+		width: 4872,
+		height: 3248,
+		url: 'https://images.pexels.com/photos/417173/pexels-photo-417173.jpeg',
+	},
+	{
+		id: 10,
+		title: '密码管理器',
+		link: '/tools/1password',
+		width: 2400,
+		height: 1228,
+		url: 'https://images.pexels.com/photos/414171/pexels-photo-414171.jpeg',
+	},
+	{
+		id: 11,
+		title: 'Icon组件',
+		link: '/my-components/icon',
+		width: 5472,
+		height: 2976,
+		url: 'https://images.pexels.com/photos/355747/pexels-photo-355747.jpeg',
+	},
 ]

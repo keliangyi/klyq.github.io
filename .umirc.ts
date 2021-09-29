@@ -3,6 +3,7 @@ import { defineConfig } from 'umi'
 export default defineConfig({
 	antd: false,
 	hash: true,
+	title: '记衣',
 	// base:"/gh-pages/",
 	nodeModulesTransform: {
 		type: 'none',
