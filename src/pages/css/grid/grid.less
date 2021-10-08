@@ -78,3 +78,124 @@
 		}
 	}
 }
+
+@keyframes toggleX {
+	from {
+		transform: scaleX(0);
+		// opacity: 0;
+	}
+	to {
+		transform: scaleX(1);
+		opacity: 1;
+	}
+}
+@keyframes toggleY {
+	from {
+		transform: scaleY(0);
+		// opacity: 0;
+	}
+	to {
+		transform: scaleY(1);
+		opacity: 1;
+	}
+}
+
+.menu {
+	.nav {
+		display: none;
+	}
+	.nav.on {
+		position: fixed;
+		top: 0;
+		left: 0;
+		display: grid;
+		grid-template-columns: repeat(32, 100vw/32);
+		grid-template-rows: repeat(32, 100vh/32);
+
+		li {
+			@cc: 0.2s;
+
+			&:nth-child(odd) {
+				transform-origin: center bottom;
+				animation: toggleY @cc forwards ease-in-out;
+			}
+			&:nth-child(even) {
+				transform-origin: center left;
+				animation: toggleX @cc forwards ease-in-out;
+			}
+			opacity: 0;
+
+			a {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				height: 100%;
+				color: #fff;
+				font-size: 24px;
+			}
+			&:nth-child(1) {
+				grid-row-start: 29;
+				grid-column-start: 1;
+				grid-row-end: 33;
+				grid-column-end: 3;
+				background-color: #302d29;
+			}
+			&:nth-child(2) {
+				grid-row-start: 29;
+				grid-column-start: 3;
+				grid-row-end: 33;
+				grid-column-end: 5;
+				background-color: #f8cc61;
+				animation-delay: @cc * 1;
+			}
+			&:nth-child(3) {
+				grid-row-start: 25;
+				grid-column-start: 1;
+				grid-row-end: 29;
+				grid-column-end: 5;
+				background-color: #5dad57;
+				animation-delay: @cc * 2;
+			}
+			&:nth-child(4) {
+				grid-row-start: 25;
+				grid-column-start: 5;
+				grid-row-end: 33;
+				grid-column-end: 9;
+				background-color: #30d6de;
+				animation-delay: @cc * 3;
+			}
+			&:nth-child(5) {
+				grid-row-start: 17;
+				grid-column-start: 1;
+				grid-row-end: 25;
+				grid-column-end: 9;
+				background-color: #dd443f;
+				animation-delay: @cc * 4;
+			}
+			&:nth-child(6) {
+				grid-row-start: 17;
+				grid-column-start: 9;
+				grid-row-end: 33;
+				grid-column-end: 17;
+				background-color: #4600f1;
+				animation-delay: @cc * 5;
+			}
+			&:nth-child(7) {
+				grid-row-start: 1;
+				grid-column-start: 1;
+				grid-row-end: 17;
+				grid-column-end: 17;
+				background-color: #f8cb63;
+				animation-delay: @cc * 6;
+			}
+			&:nth-child(8) {
+				grid-row-start: 1;
+				grid-column-start: 17;
+				grid-row-end: 33;
+				grid-column-end: 33;
+				background-color: var(--primary-color);
+				animation-delay: @cc * 7;
+			}
+		}
+	}
+}
