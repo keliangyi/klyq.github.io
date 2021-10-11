@@ -113,15 +113,16 @@ export default function IndexPage() {
 					<ul
 						style={
 							{
-								height: waterFall.maxHeight,
 								width: waterFall.maxWidth,
+								height: waterFall.maxHeight,
+								// width: '100%',
 								transform: `translateX(-${state.scroll}px) `,
 								'--itemHeight': FIXEDHEIGHT + 'px',
 								'--itemPadding': PADDING / 2 + 'px',
 							} as CSSProperties
 						}
 					>
-						{waterFall.list.map((i, idx) => (
+						{waterFall.list.map((i) => (
 							<li key={i.id} style={{ ...i.style }}>
 								<Link to={i.link} className={styles.box}>
 									<img src={i.url + '?auto=compress&cs=tinysrgb&w=600&end=1'} />

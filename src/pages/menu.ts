@@ -114,4 +114,28 @@ export const menu: Ipost[] = [
 		height: 2976,
 		url: 'https://images.pexels.com/photos/355747/pexels-photo-355747.jpeg',
 	},
+	{
+		id: 13,
+		title: 'CSS 波浪效果',
+		link: '/css/animation/border-radius',
+		width: 4872,
+		height: 3248,
+		url: 'https://images.pexels.com/photos/417173/pexels-photo-417173.jpeg',
+	},
+	{
+		id: 14,
+		title: '水印组件',
+		link: '/my-components/water-mark',
+		width: 7020,
+		height: 3163,
+		url: 'https://images.pexels.com/photos/37403/bora-bora-french-polynesia-sunset-ocean.jpg',
+	},
+	{
+		id: 15,
+		title: 'svg 环形进度条',
+		link: '/svg/progress',
+		width: 2848,
+		height: 3560,
+		url: 'https://images.pexels.com/photos/1693095/pexels-photo-1693095.jpeg',
+	},
 ]

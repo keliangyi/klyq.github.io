@@ -65,7 +65,6 @@
 
 	width: var(--w);
 	height: var(--h);
-	margin: 20px auto;
 	position: relative;
 	outline: none;
 	overflow: hidden;
@@ -151,6 +150,56 @@
 			img {
 				width: 100%;
 				background-color: lightblue;
+			}
+		}
+	}
+}
+
+.borderRadius {
+	@keyframes wave {
+		from {
+			transform: rotate(360deg);
+		}
+	}
+
+	.card {
+		width: 300px;
+		height: 420px;
+		position: relative;
+		// border-radius: 10% 47% 27% 24% / 10% 40% 36% 48%;
+
+		.waves {
+			position: absolute;
+			top: -300px;
+			left: -100px;
+		}
+		.wave {
+			width: 500px;
+			height: 500px;
+			position: absolute;
+			top: 0;
+			left: 0;
+			border-radius: 43%;
+			background-color: deepskyblue;
+			pointer-events: none;
+			opacity: 0.4;
+			animation: wave infinite linear;
+			&:nth-child(1) {
+				animation-duration: 5s;
+			}
+			&:nth-child(2) {
+				top: -10px;
+				animation-duration: 7s;
+			}
+			&:nth-child(3) {
+				top: -20px;
+				animation-duration: 9s;
+			}
+			&:nth-child(4) {
+				animation-duration: 11s;
+			}
+			&:nth-child(5) {
+				animation-duration: 13s;
 			}
 		}
 	}
