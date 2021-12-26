@@ -83,6 +83,14 @@ export const menu: Ipost[] = [
 		url: 'https://images.pexels.com/photos/1693095/pexels-photo-1693095.jpeg',
 	},
 	{
+		id: 8_8,
+		title: '拖拽吸附',
+		link: '/drag/stick',
+		width: 2848,
+		height: 3560,
+		url: 'https://images.pexels.com/photos/1693095/pexels-photo-1693095.jpeg',
+	},
+	{
 		id: 9,
 		title: 'grid 计算器',
 		link: '/css/grid/calculator',

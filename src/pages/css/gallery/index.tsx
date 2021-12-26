@@ -4,7 +4,7 @@ import { PEXELS_AUTHORIZATION } from '@/config'
 import styles from './gallery.less'
 import { Page, Icon } from '@/components'
 import classNames from 'classnames'
-import { throttle } from '@/util'
+import { throttle } from '@/helper'
 
 interface Iimage {
 	id: number

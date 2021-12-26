@@ -1,5 +1,5 @@
 import { useFn, useImmer } from '@/hooks'
-import { debounce } from '@/util'
+import { debounce } from '@/helper'
 import classNames from 'classnames'
 import React, { FC, DragEvent, useState, useEffect, useRef } from 'react'
 import styles from './drag.less'

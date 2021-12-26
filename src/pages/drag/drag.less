@@ -35,12 +35,6 @@
 	}
 }
 
-.animate {
-	// animation-duration: 1s;
-	// animation-fill-mode: both;
-	// animation-name: fadeRoute;
-}
-
 @keyframes fadeRoute {
 	from {
 		opacity: 0;
@@ -106,5 +100,60 @@
 			height: 100%;
 			object-fit: fill;
 		}
+	}
+}
+
+.stick {
+	.main {
+		max-width: 500px;
+		margin: 0 auto;
+	}
+	.row {
+		display: flex;
+		flex-wrap: wrap;
+		margin-bottom: 32px;
+		&.result {
+			.box {
+				background: #fff;
+				border: 1px solid #e8e8e8;
+				position: relative;
+				&::before {
+					content: '';
+					width: 100%;
+					height: 1px;
+					position: absolute;
+					top: 50%;
+					left: 0;
+					border: 1px dashed red;
+					transform: translateY(-50%);
+					box-sizing: border-box;
+				}
+				&::after {
+					content: '';
+					width: 1px;
+					height: 100%;
+					position: absolute;
+					top: 0;
+					left: 50%;
+					border: 1px dashed red;
+					transform: translateX(-50%);
+					box-sizing: border-box;
+				}
+			}
+		}
+	}
+	.item {
+		width: 25%;
+		padding: 3px;
+	}
+	.box {
+		width: 100%;
+		height: 25vw;
+		line-height: 25vw;
+		text-align: center;
+		box-sizing: border-box;
+		font-size: 36px;
+		color: #fff;
+		background-color: var(--primary-color);
 	}
 }

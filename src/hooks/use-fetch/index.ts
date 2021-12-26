@@ -1,7 +1,7 @@
 import { Draft } from 'immer'
 import { DependencyList, RefObject, useEffect, useRef } from 'react'
 import { useFn, useImmer } from '..'
-import { objectToQueryString, throttle } from '@/util/index'
+import { objectToQueryString, throttle } from '@/helper/index'
 
 type IParams = Record<string, string | number>
 type MyRequestInit = Omit<RequestInit, 'body'> & { body: IParams }

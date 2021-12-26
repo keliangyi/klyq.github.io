@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 import classNames from 'classnames'
 import Hashes from 'jshashes'
 import styles from './1pwd.less'
-import { copyText } from '@/util'
+import { copyText } from '@/helper'
 import { Page } from '@/components'
 
 interface AppProps {}

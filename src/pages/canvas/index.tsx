@@ -2,7 +2,7 @@ import { FC, useEffect, useRef, MouseEvent } from 'react'
 import { Canvas, Page } from '@/components'
 import { useFn, useImmer, useRAF } from '@/hooks'
 import { ISize } from '@/components/canvas'
-import { betweenRandom, throttle } from '@/util'
+import { betweenRandom, throttle } from '@/helper'
 
 const w = innerWidth
 const h = innerHeight

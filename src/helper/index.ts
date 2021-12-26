@@ -56,3 +56,16 @@ export const throttle = (fn: Function, wait: number) => {
 export const betweenRandom = (min: number, max: number) => {
 	return Math.random() * (max - min) + min
 }
+
+export const shuffle = <T>(arr: T[]) => {
+	if (!arr || arr.length < 1) {
+		return []
+	}
+	let i = arr.length
+	while (i > 0) {
+		i--
+		const randomIndex = Math.floor(Math.random() * i)
+		;[arr[i], arr[randomIndex]] = [arr[randomIndex], arr[i]]
+	}
+	return arr
+}

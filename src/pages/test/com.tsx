@@ -1,6 +1,6 @@
 import { FC, memo, useState, useCallback, useEffect, useContext } from 'react'
 import { useFetch, useImmer } from '@/hooks'
-import { Icon, Page, Popup } from '@/components'
+import { Icon, Page, Portal } from '@/components'
 import Toast from '@/components/toast'
 import { Global } from '@/components/base'
 
@@ -16,12 +16,15 @@ const TestComponent: FC = () => {
 		return c > 0.5 ? document.getElementById('root')! : document.querySelector('main')!
 	}
 	console.log('test  rendered')
-
+	const handleShow = () => {
+		// Portal()
+		Toast.show()
+	}
 	return (
 		<Page>
 			<h1>TestComponent --- {theme}</h1>
 			<Icon type="icon-plus" />
-			<Toast visible={state.visible}>this is a message from toast !!!!</Toast>
+			<Toast>this is a message from toast !!!!</Toast>
 			<Child />
 			<div>
 				<button
@@ -43,6 +46,8 @@ const TestComponent: FC = () => {
 				>
 					change theme
 				</button>
+
+				<button onClick={handleShow}>Portal</button>
 			</div>
 		</Page>
 	)

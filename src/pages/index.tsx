@@ -2,7 +2,7 @@ import { useMemo, CSSProperties, useEffect } from 'react'
 import { Link } from 'umi'
 import { Page } from '@/components'
 import { useImmer } from '@/hooks'
-import { throttle } from '@/util'
+import { throttle } from '@/helper'
 import { Ipost, menu } from './menu'
 import styles from './index.less'
 
