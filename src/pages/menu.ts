@@ -1,5 +1,5 @@
 export interface Ipost {
-	id: number
+	id: number | string
 	title: string
 	url: string
 	width: number
@@ -30,9 +30,9 @@ export const menu: Ipost[] = [
 		id: 2,
 		title: '图片墙：瀑布流&等高布局',
 		link: '/css/gallery',
-		width: 2400,
-		height: 1228,
-		url: 'https://images.pexels.com/photos/414171/pexels-photo-414171.jpeg',
+		width: 1904,
+		height: 961,
+		url: 'http://rboavmsed.hn-bkt.clouddn.com/gallery.png',
 	},
 	{
 		id: 3,
@@ -41,6 +41,14 @@ export const menu: Ipost[] = [
 		width: 5472,
 		height: 2976,
 		url: 'https://images.pexels.com/photos/355747/pexels-photo-355747.jpeg',
+	},
+	{
+		id: 'ytb-channel',
+		title: 'youtube 频道首页',
+		link: '/css/ytb-channel',
+		width: 1907,
+		height: 944,
+		url: 'http://rboavmsed.hn-bkt.clouddn.com/ytb.png',
 	},
 	{
 		id: 4,

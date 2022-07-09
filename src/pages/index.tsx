@@ -16,6 +16,17 @@ interface IWaterFall {
 const FIXEDHEIGHT = 260
 const PADDING = 12 * 2
 
+const getImageSize = async (url: string) => {
+	return new Promise((resolve, reject) => {
+		const img = new Image()
+		img.src = url
+
+		img.onload = function () {
+			console.log(url, img.width)
+		}
+	})
+}
+
 export default function IndexPage() {
 	const [post] = useImmer<Array<Ipost>>(menu)
 	const [state, setState] = useImmer({

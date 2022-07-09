@@ -1,0 +1,116 @@
+@maxWidth: 1200px;
+
+.size(@w:100%,@h:@w) {
+	width: @w;
+	height: @h;
+}
+
+.middle {
+	display: flex;
+	align-items: center;
+}
+
+.ytbChannelLayout {
+	background-color: #f1f1f1;
+	.header {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		z-index: 100;
+		height: 48px;
+		padding: 0 24px;
+		background-color: #fff;
+		font-size: 24px;
+		box-shadow: 0 1px 2px 0 #00000014;
+	}
+	.aside {
+		position: fixed;
+		top: 0;
+		left: 0;
+		bottom: 0;
+		background-color: #fff;
+		width: 240px;
+		padding-top: 48px;
+	}
+	.content {
+		margin-top: 48px;
+		margin-left: 240px;
+
+		.background {
+			height: calc((100vw - 240px) / 6.2 - 1px);
+			img {
+				display: block;
+				.size();
+				object-fit: cover;
+			}
+		}
+		.channelInfo {
+			.middle();
+			height: 100px;
+			background-color: #fff;
+			.avatar {
+				.size(80px);
+				border-radius: 50%;
+				margin-right: 12px;
+			}
+			.info {
+				flex: 1;
+			}
+			.subscriberCount {
+				margin-top: 6px;
+			}
+			.subscribeBtn {
+				display: block;
+				padding: 10px 24px;
+				background-color: #c00;
+				color: #fff;
+				font-size: 16px;
+				border: none;
+				cursor: pointer;
+			}
+		}
+		.channelTab {
+			position: sticky;
+			top: 48px;
+			height: 48px;
+			z-index: 100;
+			background-color: #f9f9f9;
+			border-bottom: 1px solid #e8e8e8;
+
+			.menu {
+				.middle();
+				li {
+					&.on {
+						a {
+							border-color: #666;
+						}
+					}
+					a {
+						display: block;
+						padding: 0 24px;
+						line-height: 45px;
+						text-decoration: none;
+						color: #666;
+						border-bottom: 3px solid transparent;
+					}
+				}
+			}
+		}
+		.channelContent {
+			padding: 24px 0;
+		}
+		.inner {
+			width: @maxWidth;
+			margin: 0 auto;
+		}
+	}
+}
+
+.dropShadow {
+	position: relative;
+	img {
+		box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+		filter: drop-shadow(0 0px 10px rgba(235, 10, 10, 0.849));
+	}
+}
